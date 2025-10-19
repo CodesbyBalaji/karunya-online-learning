@@ -1,0 +1,132 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 20%;
+    background: linear-gradient(rgb(0, 106, 255),rgb(38, 202, 239));
+    padding: 20px;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 20px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: rgb(238, 235, 235);
+    font-weight: bold;
+    display: block; 
+    padding: 10px;
+    border-radius: 6px; 
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+}
+
+.sidebar ul li a:hover {
+    background-color: rgb(0, 106, 255);
+    transform: scale(1.05); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.sidebar img{
+    width: 150px;
+    height: 120px;
+}
+
+.sidebar ul li a {
+    display: flex; 
+    align-items: center; 
+    text-decoration: none;
+    color: rgb(238, 235, 235);
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar ul li a .icon {
+    width: 30px; 
+    height: 30px; 
+    margin-right: 10px; 
+    opacity: 0.6; 
+    transition: opacity 0.3s ease; 
+}
+
+.sidebar ul li a:hover .icon {
+    opacity: 1; 
+}
+
+.sidebar ul li a:hover {
+    background-color: rgb(0, 106, 255);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.content {
+    margin-top: 60px; /* Add margin to push the content below the top bar */
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f7f5f2;
+    width: 80%; /* Keeps the content width consistent */
+}
+
+h1 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px; /* Ensure there's space below the heading */
+}
+
+/*topbar*/
+
+.top-bar {
+    width: calc(100% - 20%); /* Subtract sidebar width */
+    height: 60px; /* Fixed height for the top bar */
+    background: linear-gradient(rgb(0, 106, 255),rgb(38, 202, 239));
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center;
+    position: fixed; /* Fix the top bar at the top */
+    top: 0;
+    left: 20%; /* Start from the right edge of the sidebar */
+    z-index: 1000;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    padding-left: 20px; /* Add padding for spacing from the left edge */
+}
+
+.top-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.top-bar ul li {
+    margin: 0;
+}
+
+.top-bar ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 10px 15px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.top-bar ul li a:hover {
+    background-color: rgb(0, 106, 255);
+    transform: scale(1.1);
+}

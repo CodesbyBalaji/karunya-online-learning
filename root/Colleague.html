@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edulink</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <img src="images/image.png" alt="Logo">
+            <li><a href="index.html"><img src="images/D_icon.png" class="icon" alt="Dashboard Icon"> Dashboards</a></li>
+            <li><a href="Colleague.html"><img src="images/C_icon.png" class="icon" alt="Colleague Icon"> Colleague</a></li>
+            <li><a href="subjects.html"><img src="images/S_icon.png" class="icon" alt="Subject Icon"> Subjects</a></li>
+            <li><a href="message.html"><img src="images/M_icon.png" class="icon" alt="Message Icon"> Message</a></li>
+            <li><a href="faculty.html"><img src="images/F_icon.png" class="icon" alt="Faculty Icon"> Faculties</a></li>
+        </ul>
+
+        <div class="voice-control">
+            <button id="start-commands">Enable Voice Commands</button>
+            <button id="stop-commands">Disable Voice Commands</button>
+            <p id="status">Voice commands are currently disabled.</p>
+        </div>
+
+        <div class="voice-control">
+            <h3>Voice Commands:</h3>
+            <ul id="commandList"></ul>
+        </div>
+    </div>
+    
+    <div class="content">
+
+        <div id="profiles-container">
+            <h2>Colleagues</h2>
+
+            <div id="year-1" class="year-section">
+                <h3>Year 1</h3>
+                <div class="profiles"></div>
+            </div>
+
+            <div id="year-2" class="year-section">
+                <h3>Year 2</h3>
+                <div class="profiles"></div>
+            </div>
+
+            <div id="year-3" class="year-section">
+                <h3>Year 3</h3>
+                <div class="profiles"></div>
+            </div>
+
+            <div id="year-4" class="year-section">
+                <h3>Year 4</h3>
+                <div class="profiles"></div>
+            </div>
+
+            <div id="alumni" class="year-section">
+                <h3>Alumni</h3>
+                <div class="profiles"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = {
+                '1st': document.querySelector('#year-1 .profiles'),
+                '2nd': document.querySelector('#year-2 .profiles'),
+                '3rd': document.querySelector('#year-3 .profiles'),
+                '4th': document.querySelector('#year-4 .profiles'),
+                alumni: document.querySelector('#alumni .profiles'),
+            };
+
+            const years = ['1st', '2nd', '3rd', '4th', 'alumni'];
+
+            years.forEach(year => {
+                fetch(`http://localhost:3000/getProfilesByYear?year=${year}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(`Data for Year ${year}:`, data); // Log the data
+                        if (data.profiles && data.profiles.length > 0) {
+                            data.profiles.forEach(profile => {
+                                const profileCard = `
+                                    <div class="profile-card">
+                                        <img src="${profile.profile_pic || 'uploads/default.jpg'}" alt="${profile.name}" class="profile-pic">
+                                        <h4>${profile.name}</h4>
+                                        <p><strong>Degree:</strong> ${profile.degree}</p>
+                                        <p><strong>Year:</strong> ${profile.year}</p>
+                                        <p><strong>Project:</strong> ${profile.project}</p>
+                                        <p><strong>Project Date:</strong> ${new Date(profile.project_date).toLocaleDateString()}</p>
+                                        <p><strong>Old Projects:</strong> ${profile.oldproject || 'None'}</p>
+                                    </div>
+                                `;
+                                sections[year].innerHTML += profileCard;
+                            });
+                        } else {
+                            sections[year].innerHTML = '<p>No profiles found.</p>';
+                        }
+                    })
+                    .catch(err => {
+                        console.error(`Error fetching profiles for year ${year}:`, err);
+                        sections[year].innerHTML = '<p>Error loading profiles. Please try again later.</p>';
+                    });
+            });
+        });
+
+        // Save the voice command state to localStorage
+function saveVoiceCommandState(isEnabled) {
+    localStorage.setItem('voiceCommandsEnabled', isEnabled);
+    localStorage.setItem('voiceCommandsButtonState', isEnabled ? 'enabled' : 'disabled');
+}
+
+// Load the voice command state from localStorage
+function loadVoiceCommandState() {
+    const isVoiceEnabled = localStorage.getItem('voiceCommandsEnabled') === 'true';
+    const buttonState = localStorage.getItem('voiceCommandsButtonState');
+    const startButton = document.getElementById('start-commands');
+    const stopButton = document.getElementById('stop-commands');
+
+    if (isVoiceEnabled) {
+        startVoiceCommands();
+    } else {
+        stopVoiceCommands();
+    }
+
+    if (buttonState === 'enabled') {
+        startButton.disabled = true;
+        stopButton.disabled = false;
+    } else {
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+}
+
+// Speech recognition setup
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let isListening = false;
+
+    function startVoiceCommands() {
+        recognition.start();
+        isListening = true;
+        saveVoiceCommandState(true);
+        document.getElementById('status').textContent = 'Voice commands enabled. Speak now...';
+    }
+
+    function stopVoiceCommands() {
+        recognition.stop();
+        isListening = false;
+        saveVoiceCommandState(false);
+        document.getElementById('status').textContent = 'Voice commands disabled.';
+    }
+
+    function speakPageName(pageName) {
+        const speech = new SpeechSynthesisUtterance(pageName);
+        speech.rate = 1; // Speed of the speech
+        speech.pitch = 1; // Pitch of the voice
+        speech.volume = 1; // Volume of the speech
+        speechSynthesis.speak(speech);
+    }
+
+    recognition.addEventListener('result', (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        console.log('You said:', transcript);
+
+        // Display command in sidebar instead of alert
+        const commandList = document.getElementById('commandList');
+        const listItem = document.createElement('li');
+        listItem.textContent = transcript;
+        commandList.appendChild(listItem);
+
+        // Handle recognized commands
+        if (transcript.includes('enable')) {
+            document.getElementById('start-commands').disabled = true;
+            document.getElementById('stop-commands').disabled = false;
+        } else if (transcript.includes('disable')) {
+            document.getElementById('start-commands').disabled = false;
+            document.getElementById('stop-commands').disabled = true;
+        } else if (transcript.includes('dashboard')) {
+            window.location.href = 'index.html';
+            speakPageName("Dashboard");
+        } else if (transcript.includes('colleague') || transcript.includes('colleagues') || transcript.includes('colleague page')) {
+            window.location.href = 'Colleague.html';
+            speakPageName("Colleague page");
+        } else if (transcript.includes('subjects') || transcript.includes('subjects') || transcript.includes('open subjects page')) {
+            window.location.href = 'subjects.html';
+            speakPageName("Subjects page");
+        } else if (transcript.includes('message') || transcript.includes('message') || transcript.includes('go to message page')) {
+            window.location.href = 'message.html';
+            speakPageName("Message page");
+        } else if (transcript.includes('faculty') || transcript.includes('facultiespage') || transcript.includes('go to faculties page')) {
+            window.location.href = 'faculty.html';
+            speakPageName("Faculty page");
+        } else if (transcript.includes('up')) {
+            window.scrollBy(0, -500); // Scroll up by 100px
+            const upItem = document.createElement('li');
+            upItem.textContent = 'Scrolled up';
+            commandList.appendChild(upItem);
+            speakPageName("Scrolling up");
+        } else if (transcript.includes('down')) {
+            window.scrollBy(0, 500); // Scroll down by 100px
+            const downItem = document.createElement('li');
+            downItem.textContent = 'Scrolled down';
+            commandList.appendChild(downItem);
+            speakPageName("Scrolling up");
+        } else {
+            // Show unrecognized command in sidebar instead of pop-up
+            const unrecognizedItem = document.createElement('li');
+            unrecognizedItem.textContent = 'Command not recognized: ' + transcript;
+            commandList.appendChild(unrecognizedItem);
+        }
+    });
+
+    // Handle recognition errors
+    recognition.addEventListener('error', (event) => {
+        console.error('Error occurred in recognition:', event.error);
+        const commandList = document.getElementById('commandList');
+        const errorItem = document.createElement('li');
+        errorItem.textContent = 'Error: ' + event.error;
+        commandList.appendChild(errorItem);
+    });
+
+    // Restart listening automatically when the session ends
+    recognition.addEventListener('end', () => {
+        if (isListening) recognition.start();
+    });
+
+    // Add event listeners for voice command buttons
+    document.getElementById('start-commands').addEventListener('click', startVoiceCommands);
+    document.getElementById('stop-commands').addEventListener('click', stopVoiceCommands);
+} else {
+    console.warn('Speech Recognition not supported in this browser.');
+    alert('Voice commands are not supported in your browser.');
+}
+window.onload = function () {
+        loadVoiceCommandState();
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edulink</title>
+    <link rel="stylesheet" href="faculty_style.css">
+    <style>
+
+        .subject-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .resource-section h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .resource-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .resource-list li {
+            margin: 10px 0;
+        }
+
+        .resource-link {
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        .resource-link:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        .sidebar-container {
+        display: flex; /* Align items side by side */
+        align-items: center; /* Vertically center the items */
+        }
+
+        .staff-profile {
+        display: flex;
+        flex-direction: column; /* Stack image and name vertically */
+        align-items: center;
+        margin-left: 10px; /* Space between sidebar and profile */
+        }   
+
+        .staff-image-container {
+        margin-bottom: 10px; /* Space between image and name */
+        }
+
+        .staff-image {
+        width: 100px; /* Adjust size as needed */
+        height: 100px; /* Ensure equal width and height */
+        border-radius: 50%; /* Makes the image circular */
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        border: 3px solid rgb(148, 19, 240); /* Optional border for aesthetics */
+        }
+
+        .staff-image:hover {
+        background-color: #45a049; /* Darker green */
+        transform: scale(1.05); /* Slightly enlarge the button */
+    }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <img src="staffs_images/image.png" alt="Logo">
+            <li><a href="../index.html"><img src="staffs_images/D_icon.png" class="icon" alt="Dashboard Icon"> Dashboards</a></li>
+            <li><a href="../Colleague.html"><img src="staffs_images/C_icon.png" class="icon" alt="Colleague Icon"> Colleague</a></li>
+            <li><a href="../subjects.html"><img src="staffs_images/S_icon.png" class="icon" alt="Subject Icon"> Subjects</a></li>
+            <li><a href="../message.html"><img src="staffs_images/M_icon.png" class="icon" alt="Message Icon"> Message</a></li>
+            <li><a href="../faculty.html"><img src="staffs_images/F_icon.png" class="icon" alt="Faculty Icon"> Faculties</a></li>
+        </ul>
+    </div>
+
+    <div class="top-bar">
+        <ul>
+            <li><a href="../questionpaper.html">Question Paper</a></li>
+            <li><a href="../resources.html">Resources</a></li>
+            <li><a href="../videocontent.html">Video Content</a></li>
+            <li><a href="../contact_faculty.html">Contact Faculties</a></li>
+        </ul>
+    </div>
+
+    <div class="profile-container">
+        <h1 class="subject-title">Subject Title: Advanced Networking</h1>
+        <div class="staff-image-container">
+            <img src="../images/Jude_mam.jpeg" alt="Staff Picture" class="staff-image">
+            <p>Mrs Jude Immaculate H</p>
+        </div>
+        <div class="resource-section">
+            <h1>Mathematical Foundations of Computing :</h1>
+            <ul class="resource-list">
+                <li>
+                    <a href="files/20MA1005-1.pdf" target="_blank" class="resource-link">20MA1005-1</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-2.pdf" target="_blank" class="resource-link">20MA1005-2</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-3.pdf" target="_blank" class="resource-link">20MA1005-3</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-4.pdf" target="_blank" class="resource-link">20MA1005-4</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-5.pdf" target="_blank" class="resource-link">20MA1005-5</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-6.pdf" target="_blank" class="resource-link">20MA1005-6</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-7.pdf" target="_blank" class="resource-link">20MA1005-7</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-8.pdf" target="_blank" class="resource-link">20MA1005-8</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-9.pdf" target="_blank" class="resource-link">20MA1005-9</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-10.pdf" target="_blank" class="resource-link">20MA1005-10</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-11.pdf" target="_blank" class="resource-link">20MA1005-11</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-12.pdf" target="_blank" class="resource-link">20MA1005-12</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-13.pdf" target="_blank" class="resource-link">20MA1005-13</a>
+                </li>
+                <li>
+                    <a href="files/20MA1005-14.pdf" target="_blank" class="resource-link">20MA1005-14</a>
+                </li>
+            </ul>
+            <h1>Partial Differential Equations, Probability and Statistics :</h1>
+            <ul class="resource-list">
+                <li>
+                    <a href="files/20MA2004-1.pdf" target="_blank" class="resource-link">20MA2004-1</a>
+                </li>
+                <li>
+                    <a href="files/20MA2004-2.pdf" target="_blank" class="resource-link">20MA2004-2</a>
+                </li>
+                <li>
+                    <a href="files/20MA2004-3.pdf" target="_blank" class="resource-link">20MA2004-3</a>
+                </li>
+                <li>
+                    <a href="files/20MA2004-4.pdf" target="_blank" class="resource-link">20MA2004-4</a>
+                </li>
+                <li>
+                    <a href="files/20MA2004-5.pdf" target="_blank" class="resource-link">20MA2004-5</a>
+                </li>
+                <li>
+                    <a href="files/20MA2004-6.pdf" target="_blank" class="resource-link">20MA2004-6</a>
+                </li>
+                <li>
+                    <a href="files/20MA2004-7.pdf" target="_blank" class="resource-link">20MA2004-7</a>
+                </li>
+            </ul>
+            <h1>Discrete Structures :</h1>
+            <ul class="resource-list">
+                <li>
+                    <a href="files/20MA2005-1.pdf" target="_blank" class="resource-link">20MA2005-1</a>
+                </li>
+                <li>
+                    <a href="files/20MA2005-2.pdf" target="_blank" class="resource-link">20MA2005-2</a>
+                </li>
+                <li>
+                    <a href="files/20MA2005-3.pdf" target="_blank" class="resource-link">20MA2005-3</a>
+                </li>
+                <li>
+                    <a href="files/20MA2005-4.pdf" target="_blank" class="resource-link">20MA2005-4</a>
+                </li>
+                <li>
+                    <a href="files/20MA2005-5.pdf" target="_blank" class="resource-link">20MA2005-5</a>
+                </li>
+                <li>
+                    <a href="files/20MA2005-6.pdf" target="_blank" class="resource-link">20MA2005-6</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</body>
+</html>

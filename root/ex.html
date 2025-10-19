@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Command Navigation</title>
+</head>
+<body>
+    <h1>Speech Command Navigation</h1>
+    <ul id="commandList"></ul> <!-- Command display list -->
+
+    <script>
+        // Initialize speech recognition
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.interimResults = true; // Allow recognition while speaking
+        recognition.lang = 'en-US';
+        recognition.continuous = true; // Listen continuously
+
+        function speakPageName(pageName) {
+            const speech = new SpeechSynthesisUtterance(pageName);
+            speech.rate = 1; // Speed of the speech
+            speech.pitch = 1; // Pitch of the voice
+            speech.volume = 1; // Volume of the speech
+            speechSynthesis.speak(speech);
+        }
+
+        // Start listening for speech commands
+        function startRecognition() {
+            recognition.start(); // Start recognition
+            console.log("Listening...");
+        }
+
+        // Handle speech recognition results
+        recognition.addEventListener('result', (event) => {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            console.log('You said:', transcript);
+
+            // Display command in sidebar instead of alert
+            const commandList = document.getElementById('commandList');
+            const listItem = document.createElement('li');
+            listItem.textContent = transcript;
+            commandList.appendChild(listItem);
+
+            // Handle recognized commands
+            if (transcript.includes('dashboard')) {
+                speakPageName("Dashboard");
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000); // Delay of 1 second before navigation
+            } else if (transcript.includes('colleague') || transcript.includes('colleagues')) {
+                speakPageName("Colleague page");
+                setTimeout(() => {
+                    window.location.href = 'Colleague.html';
+                }, 1000); // Delay of 1 second before navigation
+            } else if (transcript.includes('subjects') || transcript.includes('open subjects page')) {
+                speakPageName("Subjects page");
+                setTimeout(() => {
+                    window.location.href = 'subjects.html';
+                }, 1000); // Delay of 1 second before navigation
+            }
+        });
+
+        // Handle recognition errors
+        recognition.addEventListener('error', (event) => {
+            console.error('Error occurred in recognition:', event.error);
+            const commandList = document.getElementById('commandList');
+            const errorItem = document.createElement('li');
+            errorItem.textContent = 'Error: ' + event.error;
+            commandList.appendChild(errorItem);
+        });
+
+        // Handle recognition end (i.e., when the recognition session ends)
+        recognition.addEventListener('end', () => {
+            console.log('Recognition ended. Restarting...');
+            startRecognition(); // Automatically restart recognition
+        });
+
+        // Start the speech recognition when the page loads
+        window.onload = startRecognition;
+    </script>
+</body>
+</html>

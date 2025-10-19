@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Parser</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="file"] {
+            padding: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Parser</h1>
+        <form id="resumeParserForm">
+            <div>
+                <label for="jdFiles">Upload Job Description Files:</label>
+                <input type="file" id="jdFiles" name="jdFiles" multiple accept=".pdf,.doc,.docx,.txt">
+            </div>
+            <div>
+                <label for="resumeFiles">Upload Resume Files:</label>
+                <input type="file" id="resumeFiles" name="resumeFiles" multiple accept=".pdf,.doc,.docx,.txt">
+            </div>
+            <button type="button" onclick="parseFiles()">Submit</button>
+        </form>
+
+        <div id="results" class="results" style="display: none;">
+            <h2>Results</h2>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function parseFiles() {
+            const jdFiles = document.getElementById('jdFiles').files;
+            const resumeFiles = document.getElementById('resumeFiles').files;
+            const resultsDiv = document.getElementById('results');
+            const resultsContent = document.getElementById('resultsContent');
+
+            if (jdFiles.length === 0 || resumeFiles.length === 0) {
+                alert('Please upload both job description and resume files.');
+                return;
+            }
+
+            // Mock results for demonstration purposes
+            resultsContent.innerHTML = '<p>Parsing files...</p>';
+
+            setTimeout(() => {
+                resultsContent.innerHTML = `
+                    <p><strong>Job Description:</strong> Example JD Skills</p>
+                    <p><strong>Resume:</strong> Example Resume Skills</p>
+                    <p><strong>Similarity Score:</strong> 85%</p>
+                    <p><strong>Status:</strong> Shortlisted</p>
+                `;
+                resultsDiv.style.display = 'block';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

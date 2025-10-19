@@ -1,0 +1,213 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 20%;
+    background: linear-gradient(rgb(0, 106, 255),rgb(38, 202, 239));
+    padding: 20px;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 20px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: rgb(238, 235, 235);
+    font-weight: bold;
+    display: block; 
+    padding: 10px;
+    border-radius: 6px; 
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+}
+
+.sidebar ul li a:hover {
+    background-color: rgb(0, 106, 255);
+    transform: scale(1.05); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.sidebar img{
+    width: 150px;
+    height: 120px;
+}
+
+.sidebar ul li a {
+    display: flex; 
+    align-items: center; 
+    text-decoration: none;
+    color: rgb(238, 235, 235);
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar ul li a .icon {
+    width: 30px; 
+    height: 30px; 
+    margin-right: 10px; 
+    opacity: 0.6; 
+    transition: opacity 0.3s ease; 
+}
+
+.sidebar ul li a:hover .icon {
+    opacity: 1; 
+}
+
+.sidebar ul li a:hover {
+    background-color: rgb(0, 106, 255);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
+    margin-right: 10px;
+    width: 24px;
+    height: 24px;
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f7f7f7;
+}
+
+.chat-header {
+    background: linear-gradient(rgb(0, 106, 255),rgb(38, 202, 239));
+    background-repeat: no-repeat;
+    text-decoration: palevioletred;
+    color: rgb(252, 250, 250);
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.chat-box {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #e5ddd5;
+    min-height: 300px; /* Ensures the chat box has height for scrolling */
+}
+
+.message {
+    max-width: 70%; /* Ensures that messages are not too wide */
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.message.received {
+    align-self: flex-start;
+    background: linear-gradient(#dcf8c6 ,#169e66);
+}
+
+.message.sent {
+    align-self: flex-end;
+    background: linear-gradient(#dcf8c6 ,#169e66);
+}
+
+.message .time {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    text-align: right;
+    display: block;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.chat-input input[type="file"] {
+    margin-right: 10px;
+}
+
+.chat-input button {
+    background: #075e54;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.message img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.time {
+    display: block;
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.voice-control {
+    padding: 10px;
+    margin-top: 20px;
+    border-top: 1px solid #fffdfd;
+}
+
+.voice-control button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+    font-size: 14px;
+    background-color: rgb(0, 106, 255);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.voice-control button:hover {
+    background-color: rgb(0, 106, 255);
+}
+
+.voice-control #status {
+    font-size: 12px;
+    color: #fffafa;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.voice-control h3{
+    color: white;
+    font-size: 12px;
+}
+

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects</title>
+    <link rel="stylesheet" href="subjectstyle.css">
+    <style>
+        /* Additional CSS to style the table and PDF display */
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background: linear-gradient(rgb(0, 106, 255),rgb(38, 202, 239));
+            color: white;
+        }
+
+        .pdf-container {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
+
+        .pdf-container object, .pdf-container embed {
+            width: 80%;
+            height: 80%;
+        }
+
+        .pdf-container .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 20px;
+            color: white;
+            background-color: red;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        /* Button hover effect */
+    button {
+        background-color: rgb(0, 106, 255);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        border-radius: 10px;
+    }
+
+    button:hover {
+        background-color: #45a049; /* Darker green */
+        transform: scale(1.05); /* Slightly enlarge the button */
+    }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <img src="images/image.png" alt="Logo">
+            <li><a href="index.html"><img src="images/D_icon.png" class="icon" alt="Dashboard Icon"> Dashboards</a></li>
+            <li><a href="Colleague.html"><img src="images/C_icon.png" class="icon" alt="Colleague Icon"> Colleague</a></li>
+            <li><a href="subjects.html"><img src="images/S_icon.png" class="icon" alt="Subject Icon"> Subjects</a></li>
+            <li><a href="message.html"><img src="images/M_icon.png" class="icon" alt="Message Icon"> Message</a></li>
+            <li><a href="faculty.html"><img src="images/F_icon.png" class="icon" alt="Faculty Icon"> Faculties</a></li>
+        </ul>
+
+        <div class="voice-control">
+            <button id="start-commands">Enable Voice Commands</button>
+            <button id="stop-commands">Disable Voice Commands</button>
+            <p id="status">Voice commands are currently disabled.</p>
+        </div>
+
+        <div class="voice-control">
+            <h3>Voice Commands:</h3>
+            <ul id="commandList"></ul>
+        </div>
+
+    </div>
+    
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <ul>
+            <li><a href="questionpaper.html">Question Paper</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="videocontent.html">Video Content</a></li>
+            <li><a href="contact_faculty.html">Contact Faculties</a></li>
+        </ul>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+        <h1>Welcome to the List of Courses Section</h1>
+
+        <!-- Table for Year 1 -->
+        <h2>Year 1 Courses</h2>
+        <table>
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>Course Plan/Syllabus</th>
+            </tr>
+            <tr>
+                <td>20MA1005</td>
+                <td>Mathematical Foundations of Computing</td>
+                <td>4</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')" >View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2024</td>
+                <td>Ethics in Information Technology</td>
+                <td>2</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS1001</td>
+                <td>Programming for Problem Solving</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>18MS2014</td>
+                <td>Constitution of India</td>
+                <td>0</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>18EC2003</td>
+                <td>Digital System Design</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20MS2003</td>
+                <td>Concept of Entrepreneurship</td>
+                <td>1</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20MA1006</td>
+                <td>Calculus, Vector Spaces and Laplace Transform</td>
+                <td>4</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2030</td>
+                <td>Internet of Things</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS1002</td>
+                <td>Python Programming</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>18EC2028</td>
+                <td>Microprocessor and Microcontroller</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>18CH2001</td>
+                <td>Environmental Studies</td>
+                <td>0</td>
+                <td><button onclick="openPDF('syllabi/CSE101.pdf')">View Syllabus</button></td>
+            </tr>
+        </table>
+
+        <!-- Table for Year 2 -->
+        <h2>Year 2 Courses</h2>
+        <table>
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>Course Plan/Syllabus</th>
+            </tr>
+            <tr>
+                <td>20MS2004</td>
+                <td>Entrepreneurship and Product Development</td>
+                <td>3</td>
+                <td><button id="btn-20MS2004" onclick="openPDF('syllabi/Zeroth Form-2002.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20MA2004</td>
+                <td>Partial Differential Equations, Probability and Statistics</td>
+                <td>4</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2047</td>
+                <td>Robotics</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2035</td>
+                <td>Object Oriented Programming</td>
+                <td>4.50</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2013</td>
+                <td>Data Structures and Algorithms</td>
+                <td>4.50</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2009</td>
+                <td>Computer Organization and Architecture</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20MS2007</td>
+                <td>Business Plan</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20MS2005</td>
+                <td>Soft Skills</td>
+                <td>1</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20MA2005</td>
+                <td>Discrete Structures</td>
+                <td>4</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2042</td>
+                <td>Real Time Operating Systems</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2031</td>
+                <td>Introduction to Data Science</td>
+                <td>4.50</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2007</td>
+                <td>Computer Communication Networks</td>
+                <td>4.50</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2003</td>
+                <td>Augmented Reality and Virtual Reality</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE201.pdf')">View Syllabus</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+
+        <!-- Table for Year 3 -->
+        <h2>Year 3 Courses</h2>
+        <table>
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>Course Plan/Syllabus</th>
+            </tr>
+            <tr>
+                <td>20CS2016</td>
+                <td>Database Management Systems</td>
+                <td>4.50</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2021</td>
+                <td>Distributed Computing</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2037</td>
+                <td>Optimization Methodologies</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>21CS3012</td>
+                <td>Principles of Cyber Security</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2050</td>
+                <td>Software Engineering</td>
+                <td>4.50</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2052</td>
+                <td>System Administration</td>
+                <td>4.50</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>20CS2054</td>
+                <td>Theory of Computation</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>23DC2043</td>
+                <td>Cloud computing for Data Analytics</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>23DC2054</td>
+                <td>Cryptography and Network Security</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>23DC2032</td>
+                <td>Full Stack Development</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>23DC2015</td>
+                <td>Machine Learning Techniques</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <tr>
+                <td>23DC2023</td>
+                <td>Zero Trust Architecture</td>
+                <td>3</td>
+                <td><button onclick="openPDF('syllabi/CSE301.pdf')">View Syllabus</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+
+        <!-- Table for Year 4 -->
+        <h2>Year 4 Courses</h2>
+        <table>
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Course Plan/Syllabus</th>
+            </tr>
+            <tr>
+                <td>CSE401</td>
+                <td>Computer Networks</td>
+                <td><button onclick="openPDF('syllabi/CSE401.pdf')">View Syllabus</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+
+        <!-- PDF Viewer -->
+        <div class="pdf-container" id="pdf-container">
+            <div class="close-btn" onclick="closePDF()">X</div>
+            <object id="pdf-viewer" data="" type="application/pdf"></object>
+        </div>
+
+        <script>
+            function openPDF(pdfUrl) {
+                // Display the PDF container and set the PDF file to the viewer
+                var pdfContainer = document.getElementById('pdf-container');
+                var pdfViewer = document.getElementById('pdf-viewer');
+                
+                // Set the PDF URL to the object
+                pdfViewer.setAttribute('data', pdfUrl);
+                pdfContainer.style.display = 'flex';  // Show the container as a flex container
+            }
+        
+            function closePDF() {
+                // Close the PDF container by hiding it
+                var pdfContainer = document.getElementById('pdf-container');
+                pdfContainer.style.display = 'none';  // Hide the container
+                
+                // Refresh the page after closing the PDF to fix the issue
+                location.reload();  // Reload the page
+            }
+        
+            // Close the PDF container if the user clicks outside the PDF
+            window.onclick = function(event) {
+                var pdfContainer = document.getElementById('pdf-container');
+                if (event.target === pdfContainer) {
+                    closePDF();
+                }
+            }
+
+            // Save the voice command state to localStorage
+function saveVoiceCommandState(isEnabled) {
+    localStorage.setItem('voiceCommandsEnabled', isEnabled);
+    localStorage.setItem('voiceCommandsButtonState', isEnabled ? 'enabled' : 'disabled');
+}
+
+// Load the voice command state from localStorage
+function loadVoiceCommandState() {
+    const isVoiceEnabled = localStorage.getItem('voiceCommandsEnabled') === 'true';
+    const buttonState = localStorage.getItem('voiceCommandsButtonState');
+    const startButton = document.getElementById('start-commands');
+    const stopButton = document.getElementById('stop-commands');
+
+    if (isVoiceEnabled) {
+        startVoiceCommands();
+    } else {
+        stopVoiceCommands();
+    }
+
+    if (buttonState === 'enabled') {
+        startButton.disabled = true;
+        stopButton.disabled = false;
+    } else {
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+}
+
+// Speech recognition setup
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let isListening = false;
+
+    function startVoiceCommands() {
+        recognition.start();
+        isListening = true;
+        saveVoiceCommandState(true);
+        document.getElementById('status').textContent = 'Voice commands enabled. Speak now...';
+    }
+
+    function stopVoiceCommands() {
+        recognition.stop();
+        isListening = false;
+        saveVoiceCommandState(false);
+        document.getElementById('status').textContent = 'Voice commands disabled.';
+    }
+
+    function speakPageName(pageName) {
+        const speech = new SpeechSynthesisUtterance(pageName);
+        speech.rate = 1; // Speed of the speech
+        speech.pitch = 1; // Pitch of the voice
+        speech.volume = 1; // Volume of the speech
+        speechSynthesis.speak(speech);
+    }
+
+    recognition.addEventListener('result', (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        console.log('You said:', transcript);
+
+        // Display command in sidebar instead of alert
+        const commandList = document.getElementById('commandList');
+        const listItem = document.createElement('li');
+        listItem.textContent = transcript;
+        commandList.appendChild(listItem);
+        
+
+        // Handle recognized commands
+        if (transcript.includes('enable')) {
+            document.getElementById('start-commands').disabled = true;
+            document.getElementById('stop-commands').disabled = false;
+        } else if (transcript.includes('disable')) {
+            document.getElementById('start-commands').disabled = false;
+            document.getElementById('stop-commands').disabled = true;
+        } else if (transcript.includes('dashboard')) {
+            window.location.href = 'index.html';
+            speakPageName("Dashboard");
+        } else if (transcript.includes('colleague') || transcript.includes('colleagues') || transcript.includes('colleague page')) {
+            window.location.href = 'Colleague.html';
+            speakPageName("Colleague page");
+        } else if (transcript.includes('subjects') || transcript.includes('subjects') || transcript.includes('open subjects page')) {
+            window.location.href = 'subjects.html';
+            speakPageName("Subjects page");
+        } else if (transcript.includes('message') || transcript.includes('message') || transcript.includes('go to message page')) {
+            window.location.href = 'message.html';
+            speakPageName("Message page");
+        } else if (transcript.includes('faculty') || transcript.includes('facultiespage') || transcript.includes('go to faculties page')) {
+            window.location.href = 'faculty.html';
+            speakPageName("Faculty page");
+        } else if (transcript.includes('resource') || transcript.includes('resourcepage') || transcript.includes('go to resource page')) {
+            window.location.href = 'resources.html';
+            speakPageName("Resource page");
+        } else if (transcript.includes('contact staff') || transcript.includes('contactfaculty') || transcript.includes('go to contactfaculty page')) {
+            window.location.href = 'contact_faculty.html';
+            speakPageName("you can contact faculties now");
+        } else if (transcript.includes('up')) {
+            window.scrollBy(0, -500); // Scroll up by 100px
+            const upItem = document.createElement('li');
+            upItem.textContent = 'Scrolled up';
+            commandList.appendChild(upItem);
+            speakPageName("Scrolling up");
+        } else if (transcript.includes('down')) {
+            window.scrollBy(0, 500); // Scroll down by 100px
+            const downItem = document.createElement('li');
+            downItem.textContent = 'Scrolled down';
+            commandList.appendChild(downItem);
+            speakPageName("Scrolling down"); 
+        } else if (transcript.includes('20ms2004') || transcript.includes('20 ms 2004')) {
+            console.log("Triggering button click for 20MS2004...");
+            document.getElementById("btn-20MS2004").click();
+        } else {
+            // Show unrecognized command in sidebar instead of pop-up
+            const unrecognizedItem = document.createElement('li');
+            unrecognizedItem.textContent = 'Command not recognized: ' + transcript;
+            commandList.appendChild(unrecognizedItem);
+        }
+    });
+
+    // Handle recognition errors
+    recognition.addEventListener('error', (event) => {
+        console.error('Error occurred in recognition:', event.error);
+        const commandList = document.getElementById('commandList');
+        const errorItem = document.createElement('li');
+        errorItem.textContent = 'Error: ' + event.error;
+        commandList.appendChild(errorItem);
+    });
+
+    // Restart listening automatically when the session ends
+    recognition.addEventListener('end', () => {
+        if (isListening) recognition.start();
+    });
+
+    // Add event listeners for voice command buttons
+    document.getElementById('start-commands').addEventListener('click', startVoiceCommands);
+    document.getElementById('stop-commands').addEventListener('click', stopVoiceCommands);
+} else {
+    console.warn('Speech Recognition not supported in this browser.');
+    alert('Voice commands are not supported in your browser.');
+}
+window.onload = function () {
+        loadVoiceCommandState();
+    }
+        </script>           
+
+</body>
+</html>

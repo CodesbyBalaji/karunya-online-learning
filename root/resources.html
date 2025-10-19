@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edulink</title>
+    <link rel="stylesheet" href="subjectstyle.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.staff-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.staff-image:hover {
+    transform: scale(1.1); /* Scales the image slightly on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adds a shadow on hover */
+    background: linear-gradient(rgb(0, 106, 255),rgb(38, 202, 239));
+}
+
+.resource-button {
+    background-color: rgb(0, 106, 255);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.resource-button:hover {
+    background-color: #ec1010;
+}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <img src="images/image.png" alt="Logo">
+            <li><a href="index.html"><img src="images/D_icon.png" class="icon" alt="Dashboard Icon"> Dashboards</a></li>
+            <li><a href="Colleague.html"><img src="images/C_icon.png" class="icon" alt="Colleague Icon"> Colleague</a></li>
+            <li><a href="subjects.html"><img src="images/S_icon.png" class="icon" alt="Subject Icon"> Subjects</a></li>
+            <li><a href="message.html"><img src="images/M_icon.png" class="icon" alt="Message Icon"> Message</a></li>
+            <li><a href="faculty.html"><img src="images/F_icon.png" class="icon" alt="Faculty Icon"> Faculties</a></li>
+        </ul>
+
+        <div class="voice-control">
+            <button id="start-commands">Enable Voice Commands</button>
+            <button id="stop-commands">Disable Voice Commands</button>
+            <p id="status">Voice commands are currently disabled.</p>
+        </div>
+    
+        <div class="voice-control">
+            <h3>Voice Commands:</h3>
+            <ul id="commandList"></ul>
+        </div>
+
+    </div>
+
+    <div class="top-bar">
+        <ul>
+            <li><a href="questionpaper.html">Question Paper</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="videocontent.html">Video Content</a></li>
+            <li><a href="contact_faculty.html">Contact Faculties</a></li>
+        </ul>
+    </div>
+    
+    <div class="content">
+        <h1>Staff's Resources for DSCS Department Courses</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Staff Image</th>
+                    <th>Staff Name</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <h2>Mathematics Department Staffs</h2>
+                <tr>
+                    <td><img src="images/Jude_mam.jpeg" alt="Staff 1" class="staff-image"></td>
+                    <td>Mrs Jude Immaculate H</td>
+                    <td><a href="staffs page/jude_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/Porselvi_mam.png" alt="Staff 7" class="staff-image"></td>
+                    <td>Dr. K. Porselvi </td>
+                    <td><a href="staffs page/porselvi_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+            <t/body>
+            </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Staff Image</th>
+                        <th>Staff Name</th>
+                        <th>Resource</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <h2>CSE Department Staffs</h2>
+                    <tr>
+                        <td><img src="images/Julia_mam.jpeg" alt="Staff 2" class="staff-image"></td>
+                        <td>Dr Julia Punitha Malar Dhas</td>
+                        <td><a href="staffs page/julia_mam.html"><button class="resource-button">Resource</button></a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/Kavitha_mam.jpeg" alt="Staff 8" class="staff-image"></td>
+                        <td>Ms. T. Kavitha</td>
+                        <td><a href="staffs page/kavitha_mam.html"><button class="resource-button">Resource</button></a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/basil_sir.jpg" alt="Staff 3" class="staff-image"></td>
+                        <td>Mr. S. Basil Xavier</td>
+                        <td><a href="staffs page/basil_sir.html"><button class="resource-button">Resource</button></a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/shirly_mam.png" alt="Staff 4" class="staff-image"></td>
+                        <td>Dr. S. Shirly</td>
+                        <td><a href="staffs page/shirly_mam.html"><button class="resource-button">Resource</button></a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/Anucia_mam.png" alt="Staff 5" class="staff-image"></td>
+                        <td>Mrs. Josephine Anucia A</td>
+                        <td><a href="staffs page/anucia_mam.html"><button class="resource-button">Resource</button></a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/ester_mam.jpg" alt="Staff 6" class="staff-image"></td>
+                        <td>Dr. Esther Daniel</td>
+                        <td><a href="staffs page/esther_mam.html"><button class="resource-button">Resource</button></a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Staff Image</th>
+                        <th>Staff Name</th>
+                        <th>Resource</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <h2>ECE Department Staffs</h2>
+                <tr>
+                    <td><img src="images/Naveen_sir.jpeg" alt="Staff 5" class="staff-image"></td>
+                    <td>Dr Navin M George</td>
+                    <td><a href="staffs page/navin_sir.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/bella_mam.jpg" alt="Staff 10" class="staff-image"></td>
+                    <td>Dr. Bella Mary</td>
+                    <td><a href="staffs page/bella_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/evelin_mam.webp" alt="Staff 11" class="staff-image"></td>
+                    <td>Dr. V Evelyn Brindha</td>
+                    <td><a href="staffs page/evelyn_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+            </tbody>
+        </table>
+                
+        <table>
+            <thead>
+                <tr>
+                    <th>Staff Image</th>
+                    <th>Staff Name</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <h2>AIML Department Staffs</h2>
+                <tr>
+                    <td><img src="images/sofia_mam.jpg" alt="Staff 9" class="staff-image"></td>
+                    <td>Mrs. Sophia S</td>
+                    <td><a href="staffs page/sophia_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/manoranjitham_mam.jpg" alt="Staff 7" class="staff-image"></td>
+                    <td>Dr. Manoranjitham R</td>
+                    <td><a href="staffs page/manoranjitham_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+            </tbody>
+
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Staff Image</th>
+                    <th>Staff Name</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <h2>Data Science And Cyber Security Department Staffs</h2>
+                <tr>
+                    <td><img src="images/grace_mam.jpeg" alt="Staff 1" class="staff-image"></td>
+                    <td>Dr. E. Grace Mary Kanaga</td>
+                    <td><a href="staffs page/grace_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/Arun_sir.jpg" alt="Staff 2" class="staff-image"></td>
+                    <td>Dr Arun Shalin L V</td>
+                    <td><a href="staffs page/arun_sir.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/madhu_mam.jpg" alt="Staff 3" class="staff-image"></td>
+                    <td>Dr. T. Mathu</td>
+                    <td><a href="staffs page/mathu_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/Bertia_mam.jpg" alt="Staff 4" class="staff-image"></td>
+                    <td>Ms. Bertia</td>
+                    <td><a href="staffs page/bertia_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/dharsika_mam.jpeg" alt="Staff 5" class="staff-image"></td>
+                    <td>Mrs. A.R. Darshika Kelin</td>
+                    <td><a href="staffs page/dharshika_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/vidhya_mam.png" alt="Staff 6" class="staff-image"></td>
+                    <td>Dr. K. Vidhya</td>
+                    <td><a href="staffs page/vidhya_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/rahul_sir.jpg" alt="Staff 7" class="staff-image"></td>
+                    <td>Mr. Rahul R</td>
+                    <td><a href="staffs page/rahul_sir.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/jenefa_mam.png" alt="Staff 8" class="staff-image"></td>
+                    <td>Dr. A. Jenefa </td>
+                    <td><a href="staffs page/jenefa_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/roshini_mam.jpg" alt="Staff 8" class="staff-image"></td>
+                    <td>Dr. M. Roshni Thanka</td>
+                    <td><a href="staffs page/roshni_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/Ebenezer_sir.jpeg" alt="Staff 3" class="staff-image"></td>
+                    <td>Dr. V. Ebenezer</td>
+                    <td><a href="staffs page/ebenezer_sir.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/vijula_mam.jpeg" alt="Staff 4" class="staff-image"></td>
+                    <td>Ms Vijula V</td>
+                    <td><a href="staffs page/Vijula_mam.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+            </tbody>
+        </table>    
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Staff Image</th>
+                    <th>Staff Name</th>
+                    <th>Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <h2>Mechanical Department Staffs</h2> 
+                <tr>
+                    <td><img src="images/Prince_sir.jpg" alt="Staff 6" class="staff-image"></td>
+                    <td>Dr. R. Malkiya Rasalin Prince</td>
+                    <td><a href="staffs page/prince_sir.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/immanuel_sir.jpeg" alt="Staff 8" class="staff-image"></td>
+                    <td>Dr Emmanuel Joy</td>
+                    <td><a href="staffs page/Emmanuel_sir.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+                <tr>
+                    <td><img src="images/bairi_sir.jpg" alt="Staff 1" class="staff-image"></td>
+                    <td>Bairi Levi Rakshit</td>
+                    <td><a href="staffs page/levi_sir.html"><button class="resource-button">Resource</button></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Save the voice command state to localStorage
+function saveVoiceCommandState(isEnabled) {
+    localStorage.setItem('voiceCommandsEnabled', isEnabled);
+    localStorage.setItem('voiceCommandsButtonState', isEnabled ? 'enabled' : 'disabled');
+}
+
+// Load the voice command state from localStorage
+function loadVoiceCommandState() {
+    const isVoiceEnabled = localStorage.getItem('voiceCommandsEnabled') === 'true';
+    const buttonState = localStorage.getItem('voiceCommandsButtonState');
+    const startButton = document.getElementById('start-commands');
+    const stopButton = document.getElementById('stop-commands');
+
+    if (isVoiceEnabled) {
+        startVoiceCommands();
+    } else {
+        stopVoiceCommands();
+    }
+
+    if (buttonState === 'enabled') {
+        startButton.disabled = true;
+        stopButton.disabled = false;
+    } else {
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+}
+
+// Speech recognition setup
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let isListening = false;
+
+    function startVoiceCommands() {
+        recognition.start();
+        isListening = true;
+        saveVoiceCommandState(true);
+        document.getElementById('status').textContent = 'Voice commands enabled. Speak now...';
+    }
+
+    function stopVoiceCommands() {
+        recognition.stop();
+        isListening = false;
+        saveVoiceCommandState(false);
+        document.getElementById('status').textContent = 'Voice commands disabled.';
+    }
+
+    function speakPageName(pageName) {
+        const speech = new SpeechSynthesisUtterance(pageName);
+        speech.rate = 1; // Speed of the speech
+        speech.pitch = 1; // Pitch of the voice
+        speech.volume = 1; // Volume of the speech
+        speechSynthesis.speak(speech);
+    }
+
+    recognition.addEventListener('result', (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        console.log('You said:', transcript);
+
+        // Display command in sidebar instead of alert
+        const commandList = document.getElementById('commandList');
+        const listItem = document.createElement('li');
+        listItem.textContent = transcript;
+        commandList.appendChild(listItem);
+
+        // Handle recognized commands
+        if (transcript.includes('enable')) {
+            document.getElementById('start-commands').disabled = true;
+            document.getElementById('stop-commands').disabled = false;
+        } else if (transcript.includes('disable')) {
+            document.getElementById('start-commands').disabled = false;
+            document.getElementById('stop-commands').disabled = true;
+        } else if (transcript.includes('dashboard')) {
+            window.location.href = 'index.html';
+            speakPageName("Dashboard");
+        } else if (transcript.includes('colleague') || transcript.includes('colleagues') || transcript.includes('colleague page')) {
+            window.location.href = 'Colleague.html';
+            speakPageName("Colleague page");
+        } else if (transcript.includes('subjects') || transcript.includes('subjects') || transcript.includes('open subjects page')) {
+            window.location.href = 'subjects.html';
+            speakPageName("Subjects page");
+        } else if (transcript.includes('message') || transcript.includes('message') || transcript.includes('go to message page')) {
+            window.location.href = 'message.html';
+            speakPageName("Message page");
+        } else if (transcript.includes('faculty') || transcript.includes('facultiespage') || transcript.includes('go to faculties page')) {
+            window.location.href = 'faculty.html';
+            speakPageName("Faculty page");
+        } else if (transcript.includes('resource') || transcript.includes('resourcepage') || transcript.includes('go to resource page')) {
+            window.location.href = 'resources.html';
+            speakPageName("Resource page");
+        } else if (transcript.includes('contact staff') || transcript.includes('contactfaculty') || transcript.includes('go to contactfaculty page')) {
+            window.location.href = 'contact_faculty.html';
+            speakPageName("you can contact faculties now");
+        } else if (transcript.includes('up')) {
+            window.scrollBy(0, -500); // Scroll up by 100px
+            const upItem = document.createElement('li');
+            upItem.textContent = 'Scrolled up';
+            commandList.appendChild(upItem);
+        } else if (transcript.includes('down')) {
+            window.scrollBy(0, 500); // Scroll down by 100px
+            const downItem = document.createElement('li');
+            downItem.textContent = 'Scrolled down';
+            commandList.appendChild(downItem);
+        } else {
+            // Show unrecognized command in sidebar instead of pop-up
+            const unrecognizedItem = document.createElement('li');
+            unrecognizedItem.textContent = 'Command not recognized: ' + transcript;
+            commandList.appendChild(unrecognizedItem);
+        }
+    });
+
+    // Handle recognition errors
+    recognition.addEventListener('error', (event) => {
+        console.error('Error occurred in recognition:', event.error);
+        const commandList = document.getElementById('commandList');
+        const errorItem = document.createElement('li');
+        errorItem.textContent = 'Error: ' + event.error;
+        commandList.appendChild(errorItem);
+    });
+
+    // Restart listening automatically when the session ends
+    recognition.addEventListener('end', () => {
+        if (isListening) recognition.start();
+    });
+
+    // Add event listeners for voice command buttons
+    document.getElementById('start-commands').addEventListener('click', startVoiceCommands);
+    document.getElementById('stop-commands').addEventListener('click', stopVoiceCommands);
+} else {
+    console.warn('Speech Recognition not supported in this browser.');
+    alert('Voice commands are not supported in your browser.');
+}
+window.onload = function () {
+        loadVoiceCommandState();
+    }
+    </script>
+
+</body>
+</html>

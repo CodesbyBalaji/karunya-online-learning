@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="profile_style.css">
+</head>
+<body>
+    <div class="profile-container">
+        <div class="left-section">
+            <img src="images/image.png" alt="Background" class="background-image">
+        </div>
+        <div class="right-section">
+            <h1>Welcome to EduLink</h1>
+
+        <!-- Profile content -->
+        <div id="profileContent">
+            <!-- Profile details will be displayed here if the profile exists -->
+        </div>
+
+        <div id="profileFormContainer">
+            <h2>Create Your Profile</h2>
+            <form id="profileForm" enctype="multipart/form-data">
+                <label for="profile-name">Name:</label>
+                <input id="profilePic" name="profilename" required>
+
+                <label for="profilePic">Profile Picture:</label>
+                <input type="file" id="profilePic" name="profilePic" accept=".jpg , .jpeg" required>
+
+                <label for="degree">Degree:</label>
+                <select id="degree" name="degree" required>
+                    <option value="B.Tech">B.Tech</option>
+                    <option value="M.Tech">M.Tech</option>
+                    <option value="PhD">PhD</option>
+                </select>
+
+                <label>Year:</label>
+                <div>
+                    <label><input type="radio" name="year" value="1st" required> 1st Year</label>
+                    <label><input type="radio" name="year" value="2nd"> 2nd Year</label>
+                    <label><input type="radio" name="year" value="3rd"> 3rd Year</label>
+                    <label><input type="radio" name="year" value="4th"> 4th Year</label>
+                    <label><input type="radio" name="year" value="Alumni"> Alumni</label>
+                </div>
+
+                <label for="oldproject">Already Done Project Title:</label>
+                <textarea id="oldproject" name="oldproject" rows="4" required placeholder="Example:Project Title-Date"></textarea>
+
+                <label for="project">Current Working Project Title:</label>
+                <textarea id="project" name="project" rows="4" required></textarea>
+
+                <label for="projectDate">Project Date:</label>
+                <input type="date" id="projectDate" name="projectDate" required>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Fetch user profile from the server to check if the user has already created one
+        fetch('/profile.html')
+            .then(response => response.json())
+            .then(data => {
+                const profile = data;
+
+                if (profile) {
+                    // Profile exists, display profile details
+                    const profileContent = document.getElementById('profileContent');
+                    profileContent.innerHTML = `
+                        <p><strong>Email:</strong> ${profile.email}</p>
+                        <p><strong>Degree:</strong> ${profile.degree}</p>
+                        <p><strong>Year:</strong> ${profile.year}</p>
+                        <p><strong>Project Title:</strong> ${profile.project}</p>
+                        <p><strong>Project Date:</strong> ${profile.project_date}</p>
+                        <p><strong>Old Project Titles:</strong> ${profile.oldproject}</p> <!-- Added oldproject -->
+                        <p><strong>Profile Picture:</strong></p>
+                        <img src="uploads/${profile.profile_pic}" alt="Profile Picture" style="max-width: 150px; height: auto;">
+                    `;
+                    
+                    // Hide the form if profile exists
+                    document.getElementById('profileFormContainer').style.display = 'none';
+                } else {
+                    // No profile, show the profile creation form
+                    document.getElementById('profileContent').innerHTML = '';
+                    document.getElementById('profileFormContainer').style.display = 'block';
+                }
+            })
+            .catch(err => console.error('Error fetching profile:', err));
+    
+        // Handle form submission
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const formData = new FormData(this);  // Collect form data, including file input
+
+            // Make the POST request to save the profile
+            fetch('/profile', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = 'index.html';  // Redirect after successful submission
+                } else {
+                    alert('Error saving profile');
+                }
+            })
+            .catch(err => console.error('Error submitting profile form:', err));
+        });
+
+
+    </script>
+</body>
+</html>

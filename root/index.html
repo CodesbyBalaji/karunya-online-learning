@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edulink</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <img src="images/image.png" alt="Logo">
+            <li><a href="index.html"><img src="images/D_icon.png" class="icon" alt="Dashboard Icon"> Dashboards</a></li>
+            <li><a href="Colleague.html"><img src="images/C_icon.png" class="icon" alt="Colleague Icon"> Colleague</a></li>
+            <li><a href="subjects.html"><img src="images/S_icon.png" class="icon" alt="Subject Icon"> Subjects</a></li>
+            <li><a href="message.html"><img src="images/M_icon.png" class="icon" alt="Message Icon"> Message</a></li>
+            <li><a href="faculty.html"><img src="images/F_icon.png" class="icon" alt="Faculty Icon"> Faculties</a></li>
+           
+        </ul>
+      
+        <div class="voice-control">
+            <button id="start-commands">Enable Voice Commands</button>
+            <button id="stop-commands">Disable Voice Commands</button>
+            <p id="status">Voice commands are currently disabled.</p>
+        </div>
+
+        <div class="voice-control">
+            <h3>Voice Commands:</h3>
+            <ul id="commandList"></ul>
+        </div>
+
+    </div>
+    
+    <div class="content">
+        <div class="header">
+            <img src="images/Cover_image.png" alt="Cover Picture" class="Logo-pic">
+        </div>
+
+        <div class="profile">
+            <div class="profile-picture">
+                <!-- Default profile picture; will be updated dynamically -->
+                <img id="profile-picture" src="default-profile-pic.jpg" alt="Profile Picture">
+                <span class="verified-icon">✔️</span>
+            </div>
+            <h1 class="profile-name">User Name</h1>
+            <p class="profile-info degree">Degree: </p>
+            <p class="profile-info year">Year: </p>
+            <p class="profile-info project">Project: </p>
+            <p class="profile-info project-date">Project Date: </p>
+
+            <!-- Section for Old Projects -->
+            <div class="old-projects">
+                <!-- Old Projects will be populated here -->
+            </div>
+        </div>
+    
+        <div class="grid-container">
+            <a href="Colleague.html" class="grid-item">
+                <img src="images/Colleague.png" alt="Colleague">
+                <p>Colleague</p>
+            </a>
+            <a href="subjects.html" class="grid-item">
+                <img src="images/Subjects.png" alt="Subjects" height="150">
+                <p>Subjects</p>
+            </a>
+            <a href="message.html" class="grid-item">
+                <img src="images/message.png" alt="Message">
+                <p>Message</p>
+            </a>
+            <a href="faculty.html" class="grid-item">
+                <img src="images/faculties.png" alt="Faculties">
+                <p>Faculties</p>
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // Consolidate the window.onload function
+        window.onload = function () {
+            loadVoiceCommandState();
+    
+            // Fetch profile data and dynamically populate the UI
+            fetch('http://localhost:3000/getProfile', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                const profile = data.profile;
+    
+                if (!profile) {
+                    console.warn('Profile data is missing. Redirecting...');
+                    window.location.href = 'profile.html';
+                    return;
+                }
+    
+                const profilePicturePath = profile.profile_pic;
+                const profilePicture = document.getElementById('profile-picture');
+                if (profilePicture) {
+                    profilePicture.src = profilePicturePath;
+                }
+    
+                document.querySelector('.profile-name').textContent = profile.name || 'Unknown User';
+                document.querySelector('.degree').textContent = `Degree: ${profile.degree || 'Not specified'}`;
+                document.querySelector('.year').textContent = `Year: ${profile.year || 'Not specified'}`;
+                document.querySelector('.project').textContent = `Currently Working Project: ${profile.project || 'Not specified'}`;
+                document.querySelector('.project-date').textContent = `Project's Start Date: ${
+                    profile.project_date ? new Date(profile.project_date).toLocaleDateString() : 'Not specified'
+                }`;
+    
+                if (profile.oldproject) {
+                    const oldProjects = profile.oldproject.split('\n');
+                    const oldProjectsList = oldProjects.map(project => `<li>${project}</li>`).join('');
+                    document.querySelector('.old-projects').innerHTML = `
+                        <strong>Old Projects:</strong>
+                        <ul>${oldProjectsList}</ul>
+                    `;
+                } else {
+                    document.querySelector('.old-projects').innerHTML = '<p>No old projects found.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching profile:', error);
+                alert('Failed to fetch profile data. Please try again later.');
+            });
+        };
+    
+// Save the voice command state to localStorage
+function saveVoiceCommandState(isEnabled) {
+    localStorage.setItem('voiceCommandsEnabled', isEnabled);
+    localStorage.setItem('voiceCommandsButtonState', isEnabled ? 'enabled' : 'disabled');
+}
+
+// Load the voice command state from localStorage
+function loadVoiceCommandState() {
+    const isVoiceEnabled = localStorage.getItem('voiceCommandsEnabled') === 'true';
+    const buttonState = localStorage.getItem('voiceCommandsButtonState');
+    const startButton = document.getElementById('start-commands');
+    const stopButton = document.getElementById('stop-commands');
+
+    if (isVoiceEnabled) {
+        startVoiceCommands();
+    } else {
+        stopVoiceCommands();
+    }
+
+    if (buttonState === 'enabled') {
+        startButton.disabled = true;
+        stopButton.disabled = false;
+    } else {
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+}
+
+// Speech recognition setup
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let isListening = false;
+
+    function startVoiceCommands() {
+        recognition.start();
+        isListening = true;
+        saveVoiceCommandState(true);
+        document.getElementById('status').textContent = 'Voice commands enabled. Speak now...';
+    }
+
+    function stopVoiceCommands() {
+        recognition.stop();
+        isListening = false;
+        saveVoiceCommandState(false);
+        document.getElementById('status').textContent = 'Voice commands disabled.';
+    }
+
+    function speakPageName(pageName) {
+        const speech = new SpeechSynthesisUtterance(pageName);
+        speech.rate = 1; // Speed of the speech
+        speech.pitch = 1; // Pitch of the voice
+        speech.volume = 1; // Volume of the speech
+        speechSynthesis.speak(speech);
+    }
+
+    recognition.addEventListener('result', (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        console.log('You said:', transcript);
+
+        // Display command in sidebar instead of alert
+        const commandList = document.getElementById('commandList');
+        const listItem = document.createElement('li');
+        listItem.textContent = transcript;
+        commandList.appendChild(listItem);
+
+        // Handle recognized commands
+        if (transcript.includes('enable')) {
+            document.getElementById('start-commands').disabled = true;
+            document.getElementById('stop-commands').disabled = false;
+        } else if (transcript.includes('disable')) {
+            document.getElementById('start-commands').disabled = false;
+            document.getElementById('stop-commands').disabled = true;
+        } else if (transcript.includes('dashboard')) {
+            window.location.href = 'index.html';
+            speakPageName("Dashboard");
+        } else if (transcript.includes('colleague') || transcript.includes('colleagues') || transcript.includes('colleague page')) {
+            window.location.href = 'Colleague.html';
+            speakPageName("Colleague page");
+        } else if (transcript.includes('subjects') || transcript.includes('subjects') || transcript.includes('open subjects page')) {
+            window.location.href = 'subjects.html';
+            speakPageName("Subjects page");
+        } else if (transcript.includes('message') || transcript.includes('message') || transcript.includes('go to message page')) {
+            window.location.href = 'message.html';
+            speakPageName("Message page");
+        } else if (transcript.includes('faculty') || transcript.includes('facultiespage') || transcript.includes('go to faculties page')) {
+            window.location.href = 'faculty.html';
+            speakPageName("Faculty page");
+        } else if (transcript.includes('up')) {
+            window.scrollBy(0, -500); // Scroll up by 100px
+            const upItem = document.createElement('li');
+            upItem.textContent = 'Scrolled up';
+            commandList.appendChild(upItem);
+            speakPageName("Scrolling up");
+        } else if (transcript.includes('down')) {
+            window.scrollBy(0, 500); // Scroll down by 100px
+            const downItem = document.createElement('li');
+            downItem.textContent = 'Scrolled down';
+            commandList.appendChild(downItem);
+            speakPageName("Scrolling down");
+        } else {
+            // Show unrecognized command in sidebar instead of pop-up
+            const unrecognizedItem = document.createElement('li');
+            unrecognizedItem.textContent = 'Command not recognized: ' + transcript;
+            commandList.appendChild(unrecognizedItem);
+        }
+    });
+
+    // Handle recognition errors
+    recognition.addEventListener('error', (event) => {
+        console.error('Error occurred in recognition:', event.error);
+        const commandList = document.getElementById('commandList');
+        const errorItem = document.createElement('li');
+        errorItem.textContent = 'Error: ' + event.error;
+        commandList.appendChild(errorItem);
+    });
+
+    // Restart listening automatically when the session ends
+    recognition.addEventListener('end', () => {
+        if (isListening) recognition.start();
+    });
+
+    // Add event listeners for voice command buttons
+    document.getElementById('start-commands').addEventListener('click', startVoiceCommands);
+    document.getElementById('stop-commands').addEventListener('click', stopVoiceCommands);
+} else {
+    console.warn('Speech Recognition not supported in this browser.');
+    alert('Voice commands are not supported in your browser.');
+}
+    </script>
+    
+</body>
+</html>

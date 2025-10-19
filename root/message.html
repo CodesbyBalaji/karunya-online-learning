@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Page</title>
+    <link rel="stylesheet" href="messagestyle.css">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <img src="images/image.png" alt="Logo">
+            <li><a href="index.html"><img src="images/D_icon.png" class="icon" alt="Dashboard Icon"> Dashboards</a></li>
+            <li><a href="Colleague.html"><img src="images/C_icon.png" class="icon" alt="Colleague Icon"> Colleague</a></li>
+            <li><a href="subjects.html"><img src="images/S_icon.png" class="icon" alt="Subject Icon"> Subjects</a></li>
+            <li><a href="message.html" class="active"><img src="images/M_icon.png" class="icon" alt="Message Icon"> Message</a></li>
+            <li><a href="faculty.html"><img src="images/F_icon.png" class="icon" alt="Faculty Icon"> Faculties</a></li>
+        </ul>
+
+        <div class="voice-control">
+            <button id="start-commands">Enable Voice Commands</button>
+            <button id="stop-commands">Disable Voice Commands</button>
+            <p id="status">Voice commands are currently disabled.</p>
+        </div>
+
+        <div class="voice-control">
+            <h3>Voice Commands:</h3>
+            <ul id="commandList"></ul>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2 id="username">Loading...</h2>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <!-- Messages will be dynamically loaded here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <input type="file" id="upload-image" accept="image/*">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatBox = document.getElementById('chat-box');
+            const usernameHeader = document.getElementById('username');
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const uploadImage = document.getElementById('upload-image');
+            
+            let currentUserEmail = null;
+            let receiverEmails = getReceiverEmailsFromURL();
+
+            // Fetch user details on page load
+            fetch('/getUserDetails')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert("Session expired. Please log in again.");
+                        window.location.href = '/login.html';
+                    } else {
+                        currentUserEmail = data.email;
+                        usernameHeader.textContent = data.name;
+                        loadMessages();
+                    }
+                })
+                .catch(err => console.error('Error fetching user details:', err));
+
+            function getReceiverEmailsFromURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const receivers = urlParams.get('receiverEmails');
+                return receivers ? receivers.split(',') : [];
+            }
+
+            async function loadMessages() {
+                try {
+                    const response = await fetch('http://localhost:3000/getMessages?senderEmail=balajia@karunya.edu.in&receiverEmails=balajia@karunya.edu.in,prinith@karunya.edu.in,nandhiniarulraj09@karunya.edu.in');
+                    const messages = await response.json();
+
+                    const displayedMessages = new Set();
+                    messages.forEach(message => {
+                        const uniqueKey = `${message.sender_email}-${message.text}-${message.created_at}`;
+                        if (displayedMessages.has(uniqueKey)) return;
+                        displayedMessages.add(uniqueKey);
+
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('message', message.sender_email === currentUserEmail ? 'sent' : 'received');
+
+                        const messageText = document.createElement('p');
+                        messageText.textContent = message.text || "No message content";
+                        messageElement.appendChild(messageText);
+
+                        if (message.image) {
+                            const messageImage = document.createElement('img');
+                            messageImage.src = `/images/${message.image}`;
+                            messageImage.alt = "Message image";
+                            messageElement.appendChild(messageImage);
+                        }
+
+                        const timestamp = document.createElement('span');
+                        timestamp.classList.add('timestamp');
+                        timestamp.textContent = formatTimestamp(message.created_at);
+                        messageElement.appendChild(timestamp);
+
+                        chatBox.appendChild(messageElement);
+                    });
+                } catch (error) {
+                    console.error('Error loading messages:', error);
+                }
+            }
+
+            function formatTimestamp(timestamp) {
+                const date = new Date(timestamp);
+                return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+            }
+
+            sendButton.addEventListener('click', () => {
+                if (!currentUserEmail) {
+                    alert("User not logged in or session expired");
+                    return;
+                }
+
+                const message = messageInput.value.trim();
+                const file = uploadImage.files[0];
+                const formData = new FormData();
+
+                if (!message && !file) {
+                    alert('Please enter a message or upload a file.');
+                    return;
+                }
+
+                formData.append('sender_email', currentUserEmail);
+                formData.append('receiver_email', receiverEmails.join(','));
+                formData.append('text', message);
+                if (file) formData.append('image', file);
+
+                fetch('/sendMessage', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.message === 'Message sent successfully') {
+                        loadMessages();
+                        messageInput.value = '';
+                        uploadImage.value = '';
+                    } else {
+                        console.error('Error sending message:', response);
+                    }
+                })
+                .catch(err => console.error('Error sending message:', err));
+            });
+        });
+
+        // Save the voice command state to localStorage
+function saveVoiceCommandState(isEnabled) {
+    localStorage.setItem('voiceCommandsEnabled', isEnabled);
+    localStorage.setItem('voiceCommandsButtonState', isEnabled ? 'enabled' : 'disabled');
+}
+
+// Load the voice command state from localStorage
+function loadVoiceCommandState() {
+    const isVoiceEnabled = localStorage.getItem('voiceCommandsEnabled') === 'true';
+    const buttonState = localStorage.getItem('voiceCommandsButtonState');
+    const startButton = document.getElementById('start-commands');
+    const stopButton = document.getElementById('stop-commands');
+
+    if (isVoiceEnabled) {
+        startVoiceCommands();
+    } else {
+        stopVoiceCommands();
+    }
+
+    if (buttonState === 'enabled') {
+        startButton.disabled = true;
+        stopButton.disabled = false;
+    } else {
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+}
+
+// Speech recognition setup
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let isListening = false;
+
+    function startVoiceCommands() {
+        recognition.start();
+        isListening = true;
+        saveVoiceCommandState(true);
+        document.getElementById('status').textContent = 'Voice commands enabled. Speak now...';
+    }
+
+    function stopVoiceCommands() {
+        recognition.stop();
+        isListening = false;
+        saveVoiceCommandState(false);
+        document.getElementById('status').textContent = 'Voice commands disabled.';
+    }
+
+    function speakPageName(pageName) {
+        const speech = new SpeechSynthesisUtterance(pageName);
+        speech.rate = 1; // Speed of the speech
+        speech.pitch = 1; // Pitch of the voice
+        speech.volume = 1; // Volume of the speech
+        speechSynthesis.speak(speech);
+    }
+
+    recognition.addEventListener('result', (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        console.log('You said:', transcript);
+
+        // Display command in sidebar instead of alert
+        const commandList = document.getElementById('commandList');
+        const listItem = document.createElement('li');
+        listItem.textContent = transcript;
+        commandList.appendChild(listItem);
+
+        // Handle recognized commands
+        if (transcript.includes('enable')) {
+            document.getElementById('start-commands').disabled = true;
+            document.getElementById('stop-commands').disabled = false;
+        } else if (transcript.includes('disable')) {
+            document.getElementById('start-commands').disabled = false;
+            document.getElementById('stop-commands').disabled = true;
+        } else if (transcript.includes('dashboard')) {
+            window.location.href = 'index.html';
+            speakPageName("Dashboard");
+        } else if (transcript.includes('colleague') || transcript.includes('colleagues') || transcript.includes('colleague page')) {
+            window.location.href = 'Colleague.html';
+            speakPageName("Colleague page");
+        } else if (transcript.includes('subjects') || transcript.includes('subjects') || transcript.includes('open subjects page')) {
+            window.location.href = 'subjects.html';
+            speakPageName("Subjects page");
+        } else if (transcript.includes('message') || transcript.includes('message') || transcript.includes('go to message page')) {
+            window.location.href = 'message.html';
+            speakPageName("Message page");
+        } else if (transcript.includes('faculty') || transcript.includes('facultiespage') || transcript.includes('go to faculties page')) {
+            window.location.href = 'faculty.html';
+            speakPageName("Faculty page");
+        }else if (transcript.includes('up')) {
+            window.scrollBy(0, -500); // Scroll up by 100px
+            const upItem = document.createElement('li');
+            upItem.textContent = 'Scrolled up';
+            commandList.appendChild(upItem);
+            speakPageName("Scrolling up");
+        } else if (transcript.includes('down')) {
+            window.scrollBy(0, 500); // Scroll down by 100px
+            const downItem = document.createElement('li');
+            downItem.textContent = 'Scrolled down';
+            commandList.appendChild(downItem); 
+            speakPageName("Scrolling down");
+        } else {
+            // Show unrecognized command in sidebar instead of pop-up
+            const unrecognizedItem = document.createElement('li');
+            unrecognizedItem.textContent = 'Command not recognized: ' + transcript;
+            commandList.appendChild(unrecognizedItem);
+        }
+    });
+
+    // Handle recognition errors
+    recognition.addEventListener('error', (event) => {
+        console.error('Error occurred in recognition:', event.error);
+        const commandList = document.getElementById('commandList');
+        const errorItem = document.createElement('li');
+        errorItem.textContent = 'Error: ' + event.error;
+        commandList.appendChild(errorItem);
+    });
+
+    // Restart listening automatically when the session ends
+    recognition.addEventListener('end', () => {
+        if (isListening) recognition.start();
+    });
+
+    // Add event listeners for voice command buttons
+    document.getElementById('start-commands').addEventListener('click', startVoiceCommands);
+    document.getElementById('stop-commands').addEventListener('click', stopVoiceCommands);
+} else {
+    console.warn('Speech Recognition not supported in this browser.');
+    alert('Voice commands are not supported in your browser.');
+}
+window.onload = function () {
+        loadVoiceCommandState();
+    }
+    </script>
+</body>
+</html>
