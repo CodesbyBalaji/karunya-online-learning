@@ -12,9 +12,16 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing project dependencies...'
-                sh 'npm install'
-            }
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    nvm use 24
+                    cd $WORKSPACE
+                    npm install
+                '''
+            }       
         }
+
 
         stage('Run Tests') {
             steps {
