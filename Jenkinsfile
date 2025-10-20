@@ -1,8 +1,8 @@
 pipeline {
-    agent any  // Use the default Jenkins agent
+    agent any
 
     environment {
-        IMAGE_NAME = "karunya-online-learning"      // Use local Minikube image, no Docker Hub needed
+        IMAGE_NAME = "karunya-online-learning"      // Local Minikube image
         IMAGE_TAG  = "1"
         MINIKUBE_CMD = "/opt/homebrew/bin/minikube"
         KUBECTL_CMD = "/usr/local/bin/kubectl"
@@ -36,6 +36,7 @@ pipeline {
                 echo '⚙️ Configuring Jenkins to use Minikube Docker daemon...'
                 sh '''
                     eval $(${MINIKUBE_CMD} docker-env)
+                    echo "✅ Using Minikube Docker daemon:"
                     docker info | grep "Server Version"
                 '''
             }
@@ -58,6 +59,10 @@ pipeline {
 
                     # Apply deployment.yaml
                     ${KUBECTL_CMD} apply -f deployment.yaml
+
+                    # Wait until pods are ready
+                    echo "⏳ Waiting for pods to be ready..."
+                    ${KUBECTL_CMD} wait --for=condition=ready pod -l app=karunya-app --timeout=120s
                 '''
             }
         }
