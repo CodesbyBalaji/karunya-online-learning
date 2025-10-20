@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "balajia0910/karunya-online-learning"
         IMAGE_TAG  = "1"
         DOCKER_CMD = "/usr/local/bin/docker"  // Full path to Docker
+        KUBE_NAMESPACE = "default"
     }
 
     stages {
@@ -54,11 +55,54 @@ pipeline {
                 }
             }
         }
+
+        // ====== NEW Kubernetes Deployment Stages ======
+        stage('Deploy to Minikube') {
+            steps {
+                echo '🚀 Deploying app to Minikube...'
+                sh '''
+                    # Configure environment to use Minikube Docker daemon
+                    eval $(minikube docker-env)
+
+                    # Delete old deployment & service if exist
+                    kubectl delete deployment karunya-app --ignore-not-found
+                    kubectl delete service karunya-service --ignore-not-found
+
+                    # Deploy the app
+                    kubectl run karunya-app \
+                        --image=$IMAGE_NAME:$IMAGE_TAG \
+                        --port=3000 \
+                        --replicas=2 \
+                        --env="PORT=3000"
+
+                    # Expose deployment as NodePort
+                    kubectl expose deployment karunya-app \
+                        --type=NodePort \
+                        --port=3000 \
+                        --name=karunya-service \
+                        --node-port=30007
+                '''
+            }
+        }
+
+        stage('Check Pods') {
+            steps {
+                echo '🔍 Verifying deployed pods...'
+                sh 'kubectl get pods -o wide'
+            }
+        }
+
+        stage('Get Service URL') {
+            steps {
+                echo '🌐 Retrieving Minikube service URL...'
+                sh 'minikube service karunya-service --url'
+            }
+        }
     }
 
     post {
         success {
-            echo '✅ Build, test, and Docker push completed successfully!'
+            echo '✅ Build, test, Docker push, and Kubernetes deployment completed successfully!'
         }
         failure {
             echo '❌ Something failed. Check logs for details.'
