@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:24'   // Use official Node.js 24 image
-            args '-u root:root' // Run as root to install dependencies if needed
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "balajia0910/karunya-online-learning"
