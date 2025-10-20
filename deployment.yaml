@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: karunya-app
-        image: balajia0910/karunya-online-learning:1
+        image: karunya-online-learning:1   # Local Minikube image
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
         env:
