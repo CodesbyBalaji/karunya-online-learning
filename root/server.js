@@ -10,7 +10,7 @@ const cors = require('cors');
 // Change your require statement to:
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Configure middleware
 
