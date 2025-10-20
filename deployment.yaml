@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karunya-app
+  labels:
+    app: karunya
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: karunya
+  template:
+    metadata:
+      labels:
+        app: karunya
+    spec:
+      containers:
+        - name: karunya-container
+          image: balajia0910/karunya-online-learning:1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000   # Change this if your app runs on a different port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: karunya-service
+spec:
+  selector:
+    app: karunya
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 3000            # The port inside the cluster
+      targetPort: 3000      # The port your app container exposes
+      nodePort: 30007       # Access via Minikube Node IP + this port
