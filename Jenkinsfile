@@ -61,26 +61,19 @@ pipeline {
             steps {
                 echo '🚀 Deploying app to Minikube...'
                 sh '''
+                    # Full paths
+                    MINIKUBE_CMD=/opt/homebrew/bin/minikube
+                    KUBECTL_CMD=/usr/local/bin/kubectl
+
                     # Configure environment to use Minikube Docker daemon
-                    eval $(minikube docker-env)
+                    eval $($MINIKUBE_CMD docker-env)
 
                     # Delete old deployment & service if exist
-                    kubectl delete deployment karunya-app --ignore-not-found
-                    kubectl delete service karunya-service --ignore-not-found
+                    $KUBECTL_CMD delete deployment karunya-app --ignore-not-found
+                    $KUBECTL_CMD delete service karunya-service --ignore-not-found
 
-                    # Deploy the app
-                    kubectl run karunya-app \
-                        --image=$IMAGE_NAME:$IMAGE_TAG \
-                        --port=3000 \
-                        --replicas=2 \
-                        --env="PORT=3000"
-
-                    # Expose deployment as NodePort
-                    kubectl expose deployment karunya-app \
-                        --type=NodePort \
-                        --port=3000 \
-                        --name=karunya-service \
-                        --node-port=30007
+                    # Apply deployment.yaml from repo (preferred way)
+                    $KUBECTL_CMD apply -f deployment.yaml
                 '''
             }
         }
@@ -88,24 +81,15 @@ pipeline {
         stage('Check Pods') {
             steps {
                 echo '🔍 Verifying deployed pods...'
-                sh 'kubectl get pods -o wide'
+                sh '/usr/local/bin/kubectl get pods -o wide'
             }
         }
 
         stage('Get Service URL') {
             steps {
                 echo '🌐 Retrieving Minikube service URL...'
-                sh 'minikube service karunya-service --url'
+                sh '/opt/homebrew/bin/minikube service karunya-service --url'
             }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Build, test, Docker push, and Kubernetes deployment completed successfully!'
-        }
-        failure {
-            echo '❌ Something failed. Check logs for details.'
         }
     }
 }
