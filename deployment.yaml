@@ -17,7 +17,7 @@ spec:
       containers:
         - name: karunya-container
           image: balajia0910/karunya-online-learning:1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000   # Change this if your app runs on a different port
 ---
