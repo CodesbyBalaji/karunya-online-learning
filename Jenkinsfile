@@ -1,12 +1,12 @@
 pipeline {
-    agent any
-
-    environment {
-        NVM_DIR = "${env.HOME}/.nvm"
+    agent {
+        docker {
+            image 'node:24'   // Use official Node.js 24 image
+            args '-u root:root' // Run as root to install dependencies if needed
+        }
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 echo '🔄 Pulling code from GitHub...'
@@ -18,8 +18,6 @@ pipeline {
             steps {
                 echo '📦 Installing project dependencies...'
                 sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use 24
                     npm install
                 '''
             }
@@ -33,7 +31,6 @@ pipeline {
                 '''
             }
         }
-
     }
 
     post {
