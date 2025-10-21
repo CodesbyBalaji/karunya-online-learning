@@ -76,15 +76,21 @@ pipeline {
 
         stage('Get Service URL') {
             steps {
-                echo '🌐 Retrieving Minikube service URL...'
+                echo '🌐 Setting up service access...'
                 script {
-                    // Get Minikube IP address
-                    MINIKUBE_IP = sh(script: "${MINIKUBE_CMD} ip", returnStdout: true).trim()
-                    
-                    // Your service is using nodePort: 30007
-                    SERVICE_URL = "http://${MINIKUBE_IP}:30007"
-                    
-                    echo "✅ Access your app here: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
+                    // Try multiple methods to get accessible URL
+                    try {
+                        // Method 1: Port forward
+                        sh "${KUBECTL_CMD} port-forward service/karunya-service 8080:3000 &"
+                        sleep 5
+                        SERVICE_URL = "http://localhost:8080"
+                        echo "✅ Using port-forward: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
+                    } catch (Exception e) {
+                        // Method 2: Minikube service URL
+                        echo "🔄 Falling back to Minikube service URL..."
+                        SERVICE_URL = sh(script: "timeout 30 ${MINIKUBE_CMD} service karunya-service --url | head -n1", returnStdout: true).trim()
+                        echo "✅ Using Minikube service: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
+                    }
                 }
             }
         }
