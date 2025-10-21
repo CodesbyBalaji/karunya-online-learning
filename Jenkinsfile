@@ -78,12 +78,16 @@ pipeline {
             steps {
                 echo '🌐 Retrieving working Minikube service URL...'
                 script {
-                    // Fetch localhost URL that works on Mac
-                    SERVICE_URL = sh(script: "${MINIKUBE_CMD} service karunya-service --url --wait=0 | head -n1", returnStdout: true).trim()
+                    sh 'export MINIKUBE_IN_STYLE=plain'
+                    SERVICE_URL = sh(
+                        script: "${MINIKUBE_CMD} service karunya-service --url | head -n1",
+                        returnStdout: true
+                    ).trim()
                     echo "✅ Access your app at: ${SERVICE_URL}"
                 }
             }
         }
+
     }
 
     post {
