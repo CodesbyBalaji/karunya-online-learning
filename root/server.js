@@ -4,7 +4,7 @@ const mysql = require('mysql2');
 const path = require('path');
 const session = require('express-session');
 require('dotenv').config(); // Load environment variables from .env file
-const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
+const bcrypt = require('bcryptjs');// Import bcrypt for password hashing
 const multer = require('multer');
 const cors = require('cors');
 // Change your require statement to:
