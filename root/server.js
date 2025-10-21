@@ -7,28 +7,34 @@ require('dotenv').config(); // Load environment variables from .env file
 const bcrypt = require('bcryptjs');// Import bcrypt for password hashing
 const multer = require('multer');
 const cors = require('cors');
-// Change your require statement to:
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// CORS configuration - MUST be first
 app.use(cors({
-    origin: ['http://0.0.0.0:3000', 'http://localhost:3000'],
-    credentials: true
+    origin: ['http://0.0.0.0:3000', 'http://localhost:3000', 'http://127.0.0.1:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Configure middleware
+// Handle preflight requests
+app.options('*', cors());
 
+// Configure middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname))); // Serve static files from the project root
 
 // Set up session management
 app.use(session({
     secret: 'your_secret_key', // Change this to a random secret key
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set secure: true in production with HTTPS
+    saveUninitialized: false,
+    cookie: { 
+        secure: false,
+        sameSite: 'lax' // Important for cross-origin requests
+    }
 }));
 
 // Set up MySQL connection
@@ -48,15 +54,44 @@ db.connect(err => {
     console.log('MySQL Connected...');
 });
 
-// Serve login page
-app.get('/login.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'login.html')); // Serve login.html
+// Serve static files including uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Serve HTML pages
+app.get('/', (req, res) => {
+    if (req.session.user) {
+        // If user is logged in, go to index.html
+        res.redirect('/index.html');
+    } else {
+        // Otherwise, show login page
+        res.redirect('/login.html');
+    }
 });
 
-// Serve sign-in page
-app.get('/signin.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'signin.html')); // Serve signin.html
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
+
+app.get('/signin.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'signin.html'));
+});
+
+app.get('/index.html', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login.html');
+    }
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
+app.get('/profile.html', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login.html');
+    }
+    res.sendFile(path.join(__dirname, 'profile.html'));
+});
+
+app.use(express.static(path.join(__dirname))); // Serve static files from the project root
 
 // Login functionality
 app.post('/login', (req, res) => {
@@ -95,7 +130,7 @@ app.post('/login', (req, res) => {
                         }
 
                         if (profileResults.length > 0) {
-                            // Profile exists; redirect to viewProfile
+                            // Profile exists; redirect to index
                             return res.redirect('/index.html');
                         } else {
                             // No profile; redirect to profile creation
@@ -143,15 +178,6 @@ app.post('/signin', (req, res) => {
             return res.redirect('/profile.html');
         });
     });
-});
-
-// Serve profile page
-app.get('/profile.html', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login.html');
-    }
-
-    res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
 // Configure Multer storage
@@ -226,8 +252,7 @@ app.get('/viewProfile', (req, res) => {
     });
 });
 
-//To get Profile
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Get Profile - FIXED: Use relative paths for images
 app.get('/getProfile', (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ error: 'User not logged in' });
@@ -242,15 +267,19 @@ app.get('/getProfile', (req, res) => {
 
         if (results.length > 0) {
             const profile = results[0];
-            const imagePath = profile.profile_pic ? `http://localhost:3000/uploads/${profile.profile_pic}` : 'http://localhost:3000/uploads/default.jpg';
-            res.json({ profile: profile, imagePath: imagePath });
+            // FIX: Use relative path instead of hardcoded localhost
+            const imagePath = profile.profile_pic ? `/uploads/${path.basename(profile.profile_pic)}` : '/uploads/default.jpg';
+            res.json({ 
+                profile: profile, 
+                imagePath: imagePath 
+            });
         } else {
             res.json({ profile: null });
         }
     });
 });
 
-app.post('/updateProfile', (req, res) => {
+app.post('/updateProfile', upload.single('profilePic'), (req, res) => {
     const { email } = req.session.user; // Assuming the user is logged in
     const { name, degree, year, project, project_date, oldproject } = req.body;
 
@@ -259,13 +288,29 @@ app.post('/updateProfile', (req, res) => {
         return res.status(400).send('All fields are required!');
     }
 
+    // Handle profile picture update if new file is uploaded
+    let updateQuery;
+    let queryParams;
+
+    if (req.file) {
+        const profilePicPath = path.join('uploads', req.file.filename);
+        updateQuery = `
+            UPDATE profiles
+            SET name = ?, degree = ?, year = ?, project = ?, project_date = ?, oldproject = ?, profile_pic = ?
+            WHERE email = ?
+        `;
+        queryParams = [name, degree, year, project, project_date, oldproject, profilePicPath, email];
+    } else {
+        updateQuery = `
+            UPDATE profiles
+            SET name = ?, degree = ?, year = ?, project = ?, project_date = ?, oldproject = ?
+            WHERE email = ?
+        `;
+        queryParams = [name, degree, year, project, project_date, oldproject, email];
+    }
+
     // Update the profile in the database
-    const updateQuery = `
-        UPDATE profiles
-        SET name = ?, degree = ?, year = ?, project = ?, project_date = ?, oldproject = ?
-        WHERE email = ?
-    `;
-    db.query(updateQuery, [name, degree, year, project, project_date, oldproject, email], (err) => {
+    db.query(updateQuery, queryParams, (err) => {
         if (err) {
             console.error('Error updating profile:', err);
             return res.status(500).send('Error updating profile');
@@ -278,7 +323,6 @@ app.post('/updateProfile', (req, res) => {
 // API to fetch profiles by year
 app.get('/getProfilesByYear', (req, res) => {
     const year = req.query.year; // Query parameter for year
-    const loggedInUser = req.session.username;
 
     if (!year) {
         console.error('Year parameter is missing.');
@@ -289,7 +333,7 @@ app.get('/getProfilesByYear', (req, res) => {
     console.log('Fetching profiles for year:', year);
 
     // Query to fetch profiles based on the year
-    const query = 'SELECT * FROM profiles WHERE year = ?'; // Replace with your actual query
+    const query = 'SELECT * FROM profiles WHERE year = ?';
     db.query(query, [year], (err, results) => {
         if (err) {
             console.error('Error fetching profiles by year:', err);
@@ -297,8 +341,14 @@ app.get('/getProfilesByYear', (req, res) => {
         }
 
         if (results.length > 0) {
-            console.log('Profiles fetched:', results);
-            res.json({ profiles: results });
+            // Fix image paths for all profiles
+            const profilesWithFixedPaths = results.map(profile => ({
+                ...profile,
+                profile_pic: profile.profile_pic ? `/uploads/${path.basename(profile.profile_pic)}` : '/uploads/default.jpg'
+            }));
+            
+            console.log('Profiles fetched:', profilesWithFixedPaths.length);
+            res.json({ profiles: profilesWithFixedPaths });
         } else {
             console.log('No profiles found for year:', year);
             res.json({ profiles: [], message: `No profiles found for year: ${year}` });
@@ -323,7 +373,7 @@ app.get('/getUserDetails', (req, res) => {
 
         if (results.length > 0) {
             const user = results[0];
-            res.json({ id: user.id, name: user.name, email: user.email });  // Return email along with id and name
+            res.json({ id: user.id, name: user.name, email: user.email });
         } else {
             res.status(404).json({ error: 'User not found' });
         }
@@ -399,9 +449,9 @@ app.post('/sendMessage', upload.single('image'), (req, res) => {
                     return new Promise((resolve, reject) => {
                         db.query(insertQuery, [sender_email, receiver_email, text, image], (err, result) => {
                             if (err) {
-                                reject(err); // Reject if there’s an error
+                                reject(err);
                             } else {
-                                resolve(result); // Resolve on success
+                                resolve(result);
                             }
                         });
                     });
@@ -451,6 +501,18 @@ app.get('/getMessages', (req, res) => {
     });
 });
 
+// Logout route
+app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Could not log out' });
+        }
+        res.clearCookie('connect.sid');
+        res.json({ message: 'Logout successful' });
+    });
+});
+
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server running at http://0.0.0.0:${port}`);
+    console.log(`Also accessible via http://localhost:${port}`);
 });
