@@ -91,7 +91,7 @@ app.get('/profile.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
-app.use(express.static(path.join(__dirname))); // Serve static files from the project root
+app.use(express.static(path.join(__dirname), { index: false })); // Serve static files from the project root
 
 // Login functionality
 app.post('/login', (req, res) => {
