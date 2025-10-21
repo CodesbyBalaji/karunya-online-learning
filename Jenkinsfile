@@ -76,13 +76,16 @@ pipeline {
 
         stage('Get Service URL') {
             steps {
-                echo '🌐 Retrieving working Minikube service URL...'
+                echo '🌐 Setting up port forwarding for Minikube service...'
                 script {
-                    sh 'export MINIKUBE_IN_STYLE=plain'
-                    SERVICE_URL = sh(
-                        script: "${MINIKUBE_CMD} service karunya-service --url | head -n1",
-                        returnStdout: true
-                    ).trim()
+                    // Kill any previous port-forward running for the same service
+                    sh "pkill -f 'kubectl port-forward service/karunya-service' || true"
+                    
+                    // Forward fixed port 30080 to service port 80
+                    sh "kubectl port-forward service/karunya-service 30080:80 &"
+                    
+                    // Construct stable URL
+                    SERVICE_URL = "http://127.0.0.1:30080"
                     echo "✅ Access your app at: ${SERVICE_URL}"
                 }
             }
