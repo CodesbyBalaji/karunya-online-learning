@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "karunya-online-learning"      // Local Minikube image
+        IMAGE_NAME = "karunya-online-learning"
         IMAGE_TAG  = "1"
         MINIKUBE_CMD = "/opt/homebrew/bin/minikube"
         KUBECTL_CMD = "/usr/local/bin/kubectl"
@@ -53,16 +53,11 @@ pipeline {
             steps {
                 echo '🚀 Deploying app to Minikube...'
                 sh '''
-                    # Delete old deployment & service if exist
                     ${KUBECTL_CMD} delete deployment karunya-app --ignore-not-found
                     ${KUBECTL_CMD} delete service karunya-service --ignore-not-found
-
-                    # Apply deployment.yaml
                     ${KUBECTL_CMD} apply -f deployment.yaml
-
-                    # Wait until pods are ready
                     echo "⏳ Waiting for pods to be ready..."
-                    ${KUBECTL_CMD} rollout status deployment/karunya-app --timeout=120s
+                    ${KUBECTL_CMD} wait --for=condition=ready pod -l app=karunya-app --timeout=120s
                 '''
             }
         }
@@ -76,13 +71,10 @@ pipeline {
 
         stage('Get Service URL') {
             steps {
-                echo '🌐 Retrieving Minikube service URL...'
+                echo '🌐 Retrieving working Minikube service URL...'
                 script {
-                    // Get Minikube IP and NodePort from service
-                    NODE_IP = sh(script: "${MINIKUBE_CMD} ip", returnStdout: true).trim()
-                    NODE_PORT = sh(script: "${KUBECTL_CMD} get svc karunya-service -o 'jsonpath={.spec.ports[0].nodePort}'", returnStdout: true).trim()
-                    
-                    SERVICE_URL = "http://${NODE_IP}:${NODE_PORT}"
+                    // Fetch localhost URL that works on Mac
+                    SERVICE_URL = sh(script: "${MINIKUBE_CMD} service karunya-service --url | head -n1", returnStdout: true).trim()
                     echo "✅ Access your app at: ${SERVICE_URL}"
                 }
             }
