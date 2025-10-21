@@ -76,12 +76,14 @@ pipeline {
 
         stage('Get Service URL') {
             steps {
-                echo '🌐 Retrieving working Minikube service URL...'
+                echo '🌐 Retrieving Minikube service URL...'
                 script {
-                    // Fetch localhost URL that works on Mac
-                    SERVICE_URL = sh(script: "${MINIKUBE_CMD} service karunya-service --url | head -n1", returnStdout: true).trim()
+                    // Get Minikube IP address
+                    MINIKUBE_IP = sh(script: "${MINIKUBE_CMD} ip", returnStdout: true).trim()
                     
-                    // Print as clickable link in Jenkins console
+                    // Your service is using nodePort: 30007
+                    SERVICE_URL = "http://${MINIKUBE_IP}:30007"
+                    
                     echo "✅ Access your app here: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
                 }
             }
