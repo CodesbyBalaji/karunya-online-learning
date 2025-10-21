@@ -62,7 +62,7 @@ pipeline {
 
                     # Wait until pods are ready
                     echo "⏳ Waiting for pods to be ready..."
-                    ${KUBECTL_CMD} wait --for=condition=ready pod -l app=karunya-app --timeout=120s
+                    ${KUBECTL_CMD} rollout status deployment/karunya-app --timeout=120s
                 '''
             }
         }
