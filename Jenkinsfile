@@ -80,10 +80,13 @@ pipeline {
                 script {
                     // Fetch localhost URL that works on Mac
                     SERVICE_URL = sh(script: "${MINIKUBE_CMD} service karunya-service --url | head -n1", returnStdout: true).trim()
-                    echo "✅ Access your app at: ${SERVICE_URL}"
+                    
+                    // Print as clickable link in Jenkins console
+                    echo "✅ Access your app here: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
                 }
             }
         }
+
     }
 
     post {
