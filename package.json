@@ -2,7 +2,7 @@
   "name": "karunya-online-learning",
   "version": "1.0.0",
   "scripts": {
-    "start": "node app.js"
+    "start": "node root/server.js"
   },
   "dependencies": {
     "express": "^4.18.2"
