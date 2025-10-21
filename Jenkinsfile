@@ -76,8 +76,9 @@ pipeline {
 
         stage('Get Service URL') {
             steps {
-                echo '🌐 Retrieving Minikube service URL...'
-                sh '${MINIKUBE_CMD} service karunya-service --url | head -n 1'
+                NODE_IP=$(${MINIKUBE_CMD} ip)
+                NODE_PORT=$(${KUBECTL_CMD} get svc karunya-service -o jsonpath='{.spec.ports[0].nodePort}')
+                echo "✅ Access your app at: http://${NODE_IP}:${NODE_PORT}"
             }
         }
     }
