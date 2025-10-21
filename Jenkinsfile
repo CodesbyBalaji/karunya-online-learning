@@ -76,21 +76,19 @@ pipeline {
 
         stage('Get Service URL') {
             steps {
-                echo '🌐 Setting up service access...'
+                echo '🌐 Setting up port forwarding and getting URL...'
                 script {
-                    // Try multiple methods to get accessible URL
-                    try {
-                        // Method 1: Port forward
-                        sh "${KUBECTL_CMD} port-forward service/karunya-service 8080:3000 &"
-                        sleep 5
-                        SERVICE_URL = "http://localhost:8080"
-                        echo "✅ Using port-forward: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
-                    } catch (Exception e) {
-                        // Method 2: Minikube service URL
-                        echo "🔄 Falling back to Minikube service URL..."
-                        SERVICE_URL = sh(script: "timeout 30 ${MINIKUBE_CMD} service karunya-service --url | head -n1", returnStdout: true).trim()
-                        echo "✅ Using Minikube service: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
-                    }
+                    // Get a random available port
+                    def randomPort = sh(script: 'python3 -c "import socket; s=socket.socket(); s.bind((\\\"\\\", 0)); print(s.getsockname()[1]); s.close()"', returnStdout: true).trim()
+                    
+                    // Start port-forward in background
+                    sh "${KUBECTL_CMD} port-forward service/karunya-service ${randomPort}:3000 > /dev/null 2>&1 &"
+                    sleep 5  // Wait for port-forward to establish
+                    
+                    SERVICE_URL = "http://localhost:${randomPort}"
+                    
+                    echo "✅ Access your app here: <a href='${SERVICE_URL}' target='_blank'>${SERVICE_URL}</a>"
+                    echo "📝 Port forwarding is active on port ${randomPort}"
                 }
             }
         }
