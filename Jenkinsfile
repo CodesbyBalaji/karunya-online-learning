@@ -77,7 +77,7 @@ pipeline {
         stage('Get Service URL') {
             steps {
                 echo '🌐 Retrieving Minikube service URL...'
-                sh '${MINIKUBE_CMD} service karunya-service --url'
+                sh '${MINIKUBE_CMD} service karunya-service --url | head -n 1'
             }
         }
     }
