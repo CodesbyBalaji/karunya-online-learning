@@ -34,3 +34,38 @@ spec:
   - protocol: TCP
     port: 3000          # ✅ External port
     targetPort: 3000    # ✅ Container port
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "yourpassword"
+            - name: MYSQL_DATABASE
+              value: "user_profiles"
+          ports:
+            - containerPort: 3306
