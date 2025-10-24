@@ -74,7 +74,7 @@
             const years = ['1st', '2nd', '3rd', '4th', 'alumni'];
 
             years.forEach(year => {
-                fetch(`http://localhost:3000/getProfilesByYear?year=${year}`)
+                fetch(`/getProfilesByYear?year=${year}`)
                     .then(response => response.json())
                     .then(data => {
                         console.log(`Data for Year ${year}:`, data); // Log the data
