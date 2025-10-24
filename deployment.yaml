@@ -27,11 +27,10 @@ kind: Service
 metadata:
   name: karunya-service
 spec:
-  type: NodePort
+  type: LoadBalancer    # ✅ Correct for Minikube tunnel
   selector:
     app: karunya-app
   ports:
   - protocol: TCP
-    port: 3000
-    targetPort: 3000
-    nodePort: 30007
+    port: 3000          # ✅ External port
+    targetPort: 3000    # ✅ Container port
