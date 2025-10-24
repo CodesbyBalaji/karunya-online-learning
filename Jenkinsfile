@@ -81,8 +81,8 @@ pipeline {
                     // Kill any previous port-forward running for the same service
                     sh "pkill -f 'kubectl port-forward service/karunya-service' || true"
                     
-                    // Forward fixed port 30080 to service port 80
-                    sh "kubectl port-forward service/karunya-service 30080:80 &"
+                    // Forward fixed port 30080 to service port 3000
+                    sh "kubectl port-forward service/karunya-service 30080:3000 &"
                     
                     // Construct stable URL
                     SERVICE_URL = "http://127.0.0.1:30080"
