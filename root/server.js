@@ -39,10 +39,10 @@ app.use(session({
 
 // Set up MySQL connection
 const db = mysql.createConnection({
-    host: 'mysql-service',
-    user: 'root', // replace with your MySQL username
-    password: 'balaji900', // replace with your MySQL password
-    database: 'user_profiles' // replace with your database name
+    host: 'mysql-service',       // Kubernetes service name
+    user: 'appuser',             // The app-specific user you created
+    password: 'app_password',    // The password you set
+    database: 'user_profiles'    // Your app database
 });
 
 // Connect to MySQL
