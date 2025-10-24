@@ -7,6 +7,8 @@ pipeline {
         MINIKUBE_CMD = "/opt/homebrew/bin/minikube"
         KUBECTL_CMD = "/usr/local/bin/kubectl"
         KUBE_NAMESPACE = "default"
+        SERVICE_PORT = "3000"       // Container/service port
+        LOCAL_PORT = "30080"        // Port to access locally
     }
 
     stages {
@@ -74,16 +76,13 @@ pipeline {
             }
         }
 
-        stage('Get Service URL') {
+        stage('Service Access Instructions') {
             steps {
-                echo '🌐 Getting Minikube service URL...'
-                script {
-                    SERVICE_URL = sh(
-                        script: "${MINIKUBE_CMD} service karunya-service --url",
-                        returnStdout: true
-                    ).trim()
-                    echo "✅ Access your app at: ${SERVICE_URL}"
-                }
+                echo '🌐 Your app is running in Minikube!'
+                echo "⚠️ On macOS with Docker driver, Jenkins cannot auto-generate a URL."
+                echo "👉 To access your app, run this manually in a terminal:"
+                echo "kubectl port-forward service/karunya-service ${LOCAL_PORT}:${SERVICE_PORT}"
+                echo "Then open your browser at: http://127.0.0.1:${LOCAL_PORT}"
             }
         }
 
