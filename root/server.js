@@ -39,7 +39,7 @@ app.use(session({
 
 // Set up MySQL connection
 const db = mysql.createConnection({
-    host: 'host.docker.internal',
+    host: 'mysql-service',
     user: 'root', // replace with your MySQL username
     password: 'balaji900', // replace with your MySQL password
     database: 'user_profiles' // replace with your database name
