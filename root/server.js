@@ -39,7 +39,7 @@ app.use(session({
 
 // Set up MySQL connection
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: 'host.docker.internal',
     user: 'root', // replace with your MySQL username
     password: 'balaji900', // replace with your MySQL password
     database: 'user_profiles' // replace with your database name
@@ -91,7 +91,6 @@ app.get('/profile.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
-app.use(express.static(path.join(__dirname), { index: false })); // Serve static files from the project root
 
 // Login functionality
 app.post('/login', (req, res) => {
@@ -147,6 +146,7 @@ app.post('/login', (req, res) => {
     });
 });
 
+
 // Function to validate email domain
 function isValidEmail(email) {
     const domain = '@karunya.edu.in';
@@ -179,6 +179,8 @@ app.post('/signin', (req, res) => {
         });
     });
 });
+
+app.use(express.static(path.join(__dirname), { index: false })); // Serve static files from the project root
 
 // Configure Multer storage
 const storage = multer.diskStorage({
